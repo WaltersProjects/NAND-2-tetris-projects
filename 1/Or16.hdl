@@ -11,6 +11,9 @@ CHIP Or16 {
     OUT out[16];
 
     PARTS:
+    /*
+    This time, we can use our 16-gates to replicate the or-1 gate
+    */
     Not16(in=a, out=nota);
     Not16(in=b, out=notb);
     And16(a=nota, b=notb, out=nout);

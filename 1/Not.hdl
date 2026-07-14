@@ -10,5 +10,22 @@ CHIP Not {
     OUT out;
 
     PARTS:
+    /*
+    We want the following truth table:
+    |in-|out|
+    | 0 | 1 |
+    | 1 | 0 |
+
+    Now consider the Nand gate's truth table:
+    | a | b |out|
+    | 0 | 0 | 1 |
+    | 0 | 1 | 1 |
+    | 1 | 0 | 1 |
+    | 1 | 1 | 0 |
+
+    We can see that when a=b, out = ~a (~ signifying not)
+    
+    Therefore, we want to Nand in with itself.
+    */
     Nand(a=in, b=in, out=out);
 }

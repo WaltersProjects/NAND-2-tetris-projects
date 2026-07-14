@@ -10,6 +10,11 @@ CHIP Mux {
     OUT out;
 
     PARTS:
+    /*
+    We can use our procedure again.
+
+    We get 4 different statements, which we combine in the final lines 
+    */
     Not(in=a, out=nota);
     Not(in=b, out=notb);
     Not(in=sel, out=notsel);

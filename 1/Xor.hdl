@@ -10,6 +10,19 @@ CHIP Xor {
     OUT out;
 
     PARTS:
+    /*
+    This one is trickier. We can use our procedure with each line:
+
+    | a | b |out|
+    | 0 | 0 | 0 |
+    | 0 | 1 | 1 |
+    | 1 | 0 | 1 |
+    | 1 | 1 | 0 |
+
+    We get ( ~a * b ) + ( a * ~b ) (+ signifying or, * signifying and)
+
+    We can just implement this directly below.
+    */
     Not(in=a, out=nota);
     Not(in=b, out=notb);
     And(a=a, b=notb, out=aAndNotB);

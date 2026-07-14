@@ -11,11 +11,15 @@ CHIP DMux {
     OUT a, b;
 
     PARTS:
-    
+    /*
+    We can see that a depends on sel. if sel is 0, we want a to be 1
+
+    Likewise, if sel is 1, we want b to be 1.
+
+    We have to account for in as well, which we can do with an and
+    */
     Not(in=sel, out=notsel);
     And(a=in, b=notsel, out=a);
 
     And(a=in, b=sel, out=b);
-
-    
 }

@@ -11,6 +11,9 @@ CHIP Mux16 {
     OUT out[16];
 
     PARTS:
+    /*
+    Similar approach as the mux-1
+    */
     And16(
         a[0]=sel,
         a[1]=sel,

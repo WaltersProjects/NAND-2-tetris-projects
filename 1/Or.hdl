@@ -10,6 +10,19 @@ CHIP Or {
     OUT out;
 
     PARTS:
+    /*
+    First, let us note Or's truth table:
+
+    | a | b |out|
+    | 0 | 0 | 0 |
+    | 0 | 1 | 1 |
+    | 1 | 0 | 1 |
+    | 1 | 1 | 1 |
+
+    We notice that it is very similar to nand, except that the equality cases (a=b) are reversed
+
+    Therefore, if we take the negation of both a and b and nand it, we will get the desired result
+    */
     Not(in=a, out=nota);
     Not(in=b, out=notb);
     Nand(a=nota, b=notb, out=out);

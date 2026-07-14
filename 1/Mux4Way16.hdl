@@ -13,6 +13,9 @@ CHIP Mux4Way16 {
     OUT out[16];
     
     PARTS:
+    /*
+    We simply use muxes for the first bit, then combine it 
+    */
     Mux16(a=a, b=d, sel=sel[0], out=mxad);
     Mux16(a=b, b=c, sel=sel[1], out=mxbc);
 

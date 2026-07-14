@@ -10,6 +10,13 @@ CHIP And {
     OUT out;
     
     PARTS:
+    /*
+    By definition, nand is not and.
+
+    Therefore, to achieve an and gate from a nand gate, we want to negate nand.
+
+    This works because ~~a is equivalent to a (double negation)
+    */
     Nand(a=a, b=b, out=na);
     Not(in=na, out=out);
 }
