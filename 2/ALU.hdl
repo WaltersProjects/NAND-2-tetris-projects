@@ -1,0 +1,82 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+/**
+ * ALU (Arithmetic Logic Unit):
+ * Computes out = one of the following functions:
+ *                0, 1, -1,
+ *                x, y, !x, !y, -x, -y,
+ *                x + 1, y + 1, x - 1, y - 1,
+ *                x + y, x - y, y - x,
+ *                x & y, x | y
+ * on the 16-bit inputs x, y,
+ * according to the input bits zx, nx, zy, ny, f, no.
+ * In addition, computes the two output bits:
+ * if (out == 0) zr = 1, else zr = 0
+ * if (out < 0)  ng = 1, else ng = 0
+ */
+// Implementation: Manipulates the x and y inputs
+// and operates on the resulting values, as follows:
+// if (zx == 1) sets x = 0        // 16-bit constant
+// if (nx == 1) sets x = !x       // bitwise not
+// if (zy == 1) sets y = 0        // 16-bit constant
+// if (ny == 1) sets y = !y       // bitwise not
+// if (f == 1)  sets out = x + y  // integer 2's complement addition
+// if (f == 0)  sets out = x & y  // bitwise and
+// if (no == 1) sets out = !out   // bitwise not
+
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute (out = x + y) or (out = x & y)?
+        no; // negate the out output?
+    OUT 
+        out[16], // 16-bit output
+        zr,      // if (out == 0) equals 1, else 0
+        ng;      // if (out < 0)  equals 1, else 0
+
+    PARTS:
+    /**
+    zx dealing with
+    **/
+    
+    Mux16(a=x, b=false, sel=zx, out=zxPastx);
+
+    /**
+    nx dealing with
+    **/
+    
+    Not16(in=zxPastx, out=notX);
+    Mux16(a=zxPastx, b=notX, sel=nx, out=nxPastx);
+
+    /**
+    zy dealing with
+    **/
+
+    Mux16(a=y, b=false, sel=zy, out=zyPasty);
+
+    /**
+    ny dealing with
+    **/
+
+    Not16(in=zyPasty, out=notY);
+    Mux16(a=zyPasty, b=notY, sel=ny, out=nyPasty);
+
+    // the two updated pins are nxPastx and nyPasty
+    /** function implementation **/
+    And16(a=nxPastx, b=nyPasty, out=xAndy);
+    Add16(a=nxPastx, b=nyPasty, out=xPlusy);
+    Mux16(a=xAndy, b=xPlusy, sel=f, out=fOut);
+
+    Not16(in=fOut, out=nfOut);
+    Mux16(a=fOut, b=nfOut, sel=no, out[0..7]=lobit, out[8..15]=hibit, out[15]=ng,out=out);
+    
+    Or8Way(in=lobit, out=lbHasOne);
+    Or8Way(in=hibit, out=hwHasOne);
+    Or(a=lbHasOne, b=hwHasOne, out=notZ);
+    Not(in=notZ, out=zr);
+}

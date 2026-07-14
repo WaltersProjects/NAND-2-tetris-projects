@@ -1,0 +1,49 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+/**
+ * 16-bit register:
+ * If load is asserted, the register's value is set to in;
+ * Otherwise, the register maintains its current value:
+ * if (load(t)) out(t+1) = int(t), else out(t+1) = out(t)
+ */
+CHIP Register {
+    IN in[16], load;
+    OUT out[16];
+
+    PARTS:
+    Bit(in=in[0], load=load, out=o0);
+    Bit(in=in[1], load=load, out=o1);
+    Bit(in=in[2], load=load, out=o2);
+    Bit(in=in[3], load=load, out=o3);
+    Bit(in=in[4], load=load, out=o4);
+    Bit(in=in[5], load=load, out=o5);
+    Bit(in=in[6], load=load, out=o6);
+    Bit(in=in[7], load=load, out=o7);
+    Bit(in=in[8], load=load, out=o8);
+    Bit(in=in[9], load=load, out=o9);
+    Bit(in=in[10], load=load, out=o10);
+    Bit(in=in[11], load=load, out=o11);
+    Bit(in=in[12], load=load, out=o12);
+    Bit(in=in[13], load=load, out=o13);
+    Bit(in=in[14], load=load, out=o14);
+    Bit(in=in[15], load=load, out=o15);
+
+    And16(a[0]=o0,
+          a[1]=o1,
+          a[2]=o2,
+          a[3]=o3,
+          a[4]=o4,
+          a[5]=o5,
+          a[6]=o6,
+          a[7]=o7,
+          a[8]=o8,
+          a[9]=o9,
+          a[10]=o10,
+          a[11]=o11,
+          a[12]=o12,
+          a[13]=o13,
+          a[14]=o14,
+          a[15]=o15,b=true, out=out);
+    // And(a=newOut, b=true, out=out);
+}
