@@ -66,7 +66,6 @@ CHIP ALU {
     Not16(in=zyPasty, out=notY);
     Mux16(a=zyPasty, b=notY, sel=ny, out=nyPasty);
 
-    // the two updated pins are nxPastx and nyPasty
     /** function implementation **/
     And16(a=nxPastx, b=nyPasty, out=xAndy);
     Add16(a=nxPastx, b=nyPasty, out=xPlusy);
