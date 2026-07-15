@@ -40,6 +40,14 @@ CHIP ALU {
         ng;      // if (out < 0)  equals 1, else 0
 
     PARTS:
+    /*
+    We will use the same general principle for each variable
+
+    First, we will compute the value if the variable were to be true
+
+    Then, we will Mux16 this value with the previous value (the value if the variable was false)
+    with selector as the variable
+    */
     /**
     zx dealing with
     **/
@@ -71,6 +79,16 @@ CHIP ALU {
     Add16(a=nxPastx, b=nyPasty, out=xPlusy);
     Mux16(a=xAndy, b=xPlusy, sel=f, out=fOut);
 
+    /*
+    Now we need to get the zero and negative bit values
+
+    We can split the output bit into three groups:
+    1. first 8 bits
+    2. last 8 bits
+    3. last bit
+    For the zr bit, we can use our Or8Way for the first two groups
+    If the last bit is 1, then we set ng to 1
+    */
     Not16(in=fOut, out=nfOut);
     Mux16(a=fOut, b=nfOut, sel=no, out[0..7]=lobit, out[8..15]=hibit, out[15]=ng,out=out);
     

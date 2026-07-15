@@ -10,6 +10,12 @@ CHIP FullAdder {
         carry;   // Left bit of a + b + c
 
     PARTS:
+    /*
+    We can simply add a and b, and add that to c [(a+b) + c]
+
+    For the carry bit, we want to carry it if a+b requires a carry
+    or (a+b) + c requires a carry. We can do this with the OR chip
+    */
     HalfAdder(a=a, b=b, sum=aPlusb, carry=carryAb);
     HalfAdder(a=aPlusb, b=c, sum=sum, carry=carryAll);
     Or(a=carryAb, b=carryAll, out=carry);

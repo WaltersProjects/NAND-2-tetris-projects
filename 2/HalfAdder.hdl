@@ -10,6 +10,27 @@ CHIP HalfAdder {
         carry;  // Left bit of a + b
 
     PARTS:
+    /*
+    We can use simple logic gates here.
+
+    Notice the truth table with sum
+    | a | b |sum|
+    | 0 | 0 | 0 |
+    | 0 | 1 | 1 |
+    | 1 | 0 | 1 |
+    | 1 | 1 | 0 |
+
+    We can see that it is simply a XOR b.
+
+    For the carry bit:
+    | a | b |car|
+    | 0 | 0 | 0 |
+    | 0 | 1 | 0 |
+    | 1 | 0 | 0 |
+    | 1 | 1 | 1 |
+
+    We see that it is simply a * b.
+    */
     Xor(a=a, b=b, out=sum);
     And(a=a, b=b, out=carry);
 }
