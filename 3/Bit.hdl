@@ -12,6 +12,16 @@ CHIP Bit {
     OUT out;
 
     PARTS:
+    /*
+    It's important to understand what the DFF (D Flip-Flop) does.
+
+    The DFF takes an input and "repeats" it (as an output) one clock step later
+
+    If we have a way to connect the DFF to itself in a way, we can achieve the functionality we want
+    
+    We can do this by using a mux to decide whether we should load a new bit
+    and hooking it up to a DFF. We then "loop" around the output to the mux ag
+    */
     Mux(a=newOut, b=in, sel=load, out=selDff);
     DFF(in=selDff, out=newOut);
     And(a=newOut, b=true, out=out);
