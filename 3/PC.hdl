@@ -13,10 +13,18 @@ CHIP PC {
     OUT out[16];
     
     PARTS:
+    /*
+    We can use the same logic we did with the ALU; calculate each possibility
+    and then use a Mux to pick which one we want.
+    */
+    // increment? [inc]
     Inc16(in=fauxOut, out=inInc);
     Mux16(a=fauxOut, b=inInc, sel=inc, out=pastInc);
+    // load? [load]
     Mux16(a=pastInc, b=in, sel=load, out=pastLoad);
+    // reset? [reset]
     Mux16(a=pastLoad, b=false, sel=reset, out=pastReset);
+    // store the value and split it
     Register(in=pastReset, load=true, out=fauxOut);
     And16(a=fauxOut, b=true, out=out);
 }

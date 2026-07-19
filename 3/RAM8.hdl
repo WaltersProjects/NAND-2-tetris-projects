@@ -12,6 +12,14 @@ CHIP RAM8 {
     OUT out[16];
 
     PARTS:
+    /*
+    We want to determine which register to load to.
+
+    We can do this using a DMux 8way; this extrapolates 1 bit to 8 with a selector
+
+    (See the chip for more details)
+    We then have 8 registers; we can select which one to output with a mux168way;
+    */
     DMux8Way(in=load, sel=address, a=l0, b=l1, c=l2, d=l3, e=l4, f=l5, g=l6, h=l7);
     Register(in=in, load=l0, out=r0);
     Register(in=in, load=l1, out=r1);

@@ -24,5 +24,7 @@ CHIP Bit {
     */
     Mux(a=newOut, b=in, sel=load, out=selDff);
     DFF(in=selDff, out=newOut);
+    // Sadly, we can't directly hook up the output pin to the mux at the beginning
+    // so we are forced to use some hackery.
     And(a=newOut, b=true, out=out);
 }

@@ -12,6 +12,9 @@ CHIP Register {
     OUT out[16];
 
     PARTS:
+    /*
+    We simply save 16 bits for each input, and combine them with an AND at the end
+    */
     Bit(in=in[0], load=load, out=o0);
     Bit(in=in[1], load=load, out=o1);
     Bit(in=in[2], load=load, out=o2);
@@ -45,5 +48,4 @@ CHIP Register {
           a[13]=o13,
           a[14]=o14,
           a[15]=o15,b=true, out=out);
-    // And(a=newOut, b=true, out=out);
 }
