@@ -6,29 +6,26 @@
 // (R0, R1, R2 refer to RAM[0], RAM[1], and RAM[2], respectively.)
 // The algorithm is based on repetitive addition.
 
-@i
-M=1
 @R2
 M=0
+
 (LOOP)
    @R1
    D=M
-   @i
-   D=M-D
-   @STOP
-   D;JGT // if i > n, goto STOP; aka if i-n >= 0
+   @END
+   D;JEQ // if i = 0, goto END
 
    @R0
    D=M
    @R2
    M=D+M // add R0 to the product
 
-   @i
-   M=M+1 // add one to i
+   @R1
+   M=M-1 // subtract one from i
 
    @LOOP
-   0;JMP // goto LOOP
+   0;JMP // loop
 
-(STOP)
-   @STOP
+(END)
+   @END
    0;JMP
