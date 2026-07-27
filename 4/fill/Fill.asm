@@ -22,15 +22,25 @@ D=M-D
 
 @n
 M=D // n = KBD-SCREEN
-
-@UPDATE_SCREEN
+@KEYCHECK
 0;JMP
+
+(KEYCHECK)
+    @i
+    M=0
+    @KBD
+    D=M
+    @CLEAR_SCREEN
+    D;JEQ
+    @UPDATE_SCREEN
+    D;JNE
+
 (UPDATE_SCREEN)
     @n
     D=M
     @i
     D=M-D
-    @END
+    @KEYCHECK
     D;JEQ // jump if i == n
 
     @SCREEN
@@ -44,6 +54,22 @@ M=D // n = KBD-SCREEN
 
     @UPDATE_SCREEN
     0;JMP
-(END)
-    @END
+(CLEAR_SCREEN)
+    @n
+    D=M
+    @i
+    D=M-D
+    @KEYCHECK
+    D;JEQ // jump if i == n
+
+    @SCREEN
+    D=A
+    @i
+    A=D+M // get the address of the current register
+    M=0
+
+    @i
+    M=M+1 // i+=1
+
+    @CLEAR_SCREEN
     0;JMP
