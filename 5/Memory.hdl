@@ -24,13 +24,27 @@ CHIP Memory {
     OUT out[16];
 
     PARTS:
+    // In this system, the "lower memory" will represent the RAM16K
+    // and the "upper memory" will represent the Screen and Keyboard
+
+    // First, we need to determine where we want to put the load bit
     DMux(in=load, sel=address[14], a=lwrLoad, b=uprLoad);
+    
+    // At this point, we have 14 bits to address the RAM16K,
+    // since we used the most significant bit to determine which area of the memory to use
     RAM16K(in=in, load=lwrLoad, address=address[0..13], out=lwrOut);
     
+    // Again, we have 14 bits to address the Screen and Keyboard.
+    // We need one bit to distinguish which one to pick if the upper memory is selected
+    // so we end up with 13 bits to address the screen.
     Screen(in=in, load=uprLoad, address=address[0..12], out=scrOut);
+
+    // We will always need to probe the output of the Keyboard
     Keyboard(out=kbdOut);
 
+    // Now, we pick which place from the upper memory to possibly output using the second-most significant bit
     Mux16(a=scrOut, b=kbdOut, sel=address[13], out=mxIO);
 
+    // Using the selected upper memory output, we choose whether to output the upper or lower memory based on the most significant bit
     Mux16(a=lwrOut, b=mxIO, sel=address[14], out=out);
 }
