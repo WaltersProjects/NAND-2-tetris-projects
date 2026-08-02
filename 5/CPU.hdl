@@ -31,5 +31,97 @@ CHIP CPU {
         pc[15];          // address of next instruction
 
     PARTS:
-	//// Replace this comment with your code.
+    // Give names to our bits
+    And(a=instruction[15], b=true, out=ins); // c-instruction or a-instruction?
+    And(a=instruction[12], b=true, out=a); // is a in comp?
+    // comp bits are instruction[11..6]
+    And(a=instruction[5], b=true, out=d1); // dest 1 - 3
+    And(a=instruction[4], b=true, out=d2);
+    And(a=instruction[3], b=true, out=d3);
+    And(a=instruction[2], b=true, out=j1); // jump 1 - 3
+    And(a=instruction[1], b=true, out=j2);
+    And(a=instruction[0], b=true, out=j3);
+
+    // REGISTER A //
+    // if we have an a-instruction, we want to load in the value of instruction
+    // if we have a c-instruction, we want to load aluOut iff d1 is 1
+    Mux16(a=instruction, b=aluOut, sel=ins, out=aIn);
+    Mux(a=true, b=d1, sel=ins, out=aLd);
+    ARegister(in=aIn, load=aLd, out=aRout);
+
+    // REGISTER D //
+    // if we have an a-instruction, we do nothing
+    // if we have a c-instruction, and d2 is 1, we load aluOut to D
+    Mux(a=false, b=d2, sel=ins, out=ldD);
+    DRegister(in=aluOut, load=ldD, out=dRout);
+
+    // ALU //
+    Mux16(a=aRout, b=inM, sel=a, out=firstNum);
+
+    ALU(x=dRout, y=firstNum, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=aluOut, zr=zr, ng=ng);
+    And16(a=aluOut, b=true, out=outM);
+    
+    And(a=d3, b=ins, out=writeM);
+    And16(a=aRout, b=true, out[0]=addressM[0],
+       out[1]=addressM[1],
+       out[2]=addressM[2],
+       out[3]=addressM[3],
+       out[4]=addressM[4],
+       out[5]=addressM[5],
+       out[6]=addressM[6],
+       out[7]=addressM[7],
+       out[8]=addressM[8],
+       out[9]=addressM[9],
+       out[10]=addressM[10],
+       out[11]=addressM[11],
+       out[12]=addressM[12],
+       out[13]=addressM[13],
+       out[14]=addressM[14]);
+
+    // PC //
+    // do we want to do a jump?
+    Not(in=zr, out=nzr);
+    Not(in=ng, out=nng);
+    And(a=nzr, b=nng, out=pos);
+
+    DMux8Way(in=true, sel[0]=j3,sel[1]=j2,sel[2]=j1, a=nop, b=jgt, c=jeq, d=jge, e=jlt, f=jne, g=jle, h=jmp);
+
+    And(a=jgt, b=pos, out=jgtQ);
+    And(a=jeq, b=zr, out=jeqQ);
+    
+    Not(in=ng, out=geq);
+    And(a=jge, b=geq, out=jgeQ);
+    And(a=jlt, b=ng, out=jltQ);
+    Not(in=zr, out=ne);
+    And(a=jne, b=ne, out=jneQ);
+    Not(in=pos, out=le);
+    And(a=jle, b=le, out=jleQ);
+    // And(a=jmp, b=true, out=jmpQ);
+
+    Or8Way(in[0]=false,
+           in[1]=jgtQ,
+           in[2]=jeqQ,
+           in[3]=jgeQ,
+           in[4]=jltQ,
+           in[5]=jneQ,
+           in[6]=jleQ,
+           in[7]=jmp, out=pcLd);
+
+    And(a=pcLd, b=ins, out=npcLd);
+    PC(in=aRout, load=npcLd, inc=true, reset=reset,
+       out[0]=pc[0],
+       out[1]=pc[1],
+       out[2]=pc[2],
+       out[3]=pc[3],
+       out[4]=pc[4],
+       out[5]=pc[5],
+       out[6]=pc[6],
+       out[7]=pc[7],
+       out[8]=pc[8],
+       out[9]=pc[9],
+       out[10]=pc[10],
+       out[11]=pc[11],
+       out[12]=pc[12],
+       out[13]=pc[13],
+       out[14]=pc[14]);
 }
