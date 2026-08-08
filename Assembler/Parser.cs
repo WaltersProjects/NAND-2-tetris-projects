@@ -63,12 +63,6 @@ class Parser
                 i -= 1;
             }
         }
-
-        foreach( KeyValuePair<string, string> kvp in jumpSubstitutions )
-        {
-            Debug.WriteLine($"{kvp.Key}: {kvp.Value}");
-        }
-
         for ( int i = 0; i < codeLines.Count; i++ )
         {
             try
