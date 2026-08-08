@@ -158,7 +158,7 @@ class Translator
                         cString = "010101";
                         break;
                     default:
-                        throw new ArgumentException($"Invalid computation code at line {i}");
+                        throw new ArgumentException($"Invalid computation code at line {i} (\"{comp}\")");
                 }
 
                 lOutput = lOutput + cString + dString + jString;

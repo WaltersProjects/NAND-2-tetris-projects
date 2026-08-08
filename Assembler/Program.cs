@@ -1,4 +1,5 @@
 ﻿string fileName = args[0];
+//string fileName = "..\\..\\..\\pong\\Pong.asm";
 bool exists = File.Exists(fileName);
 if (!exists)
 {

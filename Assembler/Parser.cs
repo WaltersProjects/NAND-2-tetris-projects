@@ -1,3 +1,5 @@
+using System.Diagnostics;
+
 class Parser
 {
     public string FilePath { get; set; }
@@ -52,21 +54,21 @@ class Parser
         // look for jumps
         for ( int i = 0; i < codeLines.Count; i++ )
         {
-            try
+            if(codeLines[i].StartsWith("("))
             {
-                if(codeLines[i].StartsWith("("))
-                {
-                    // we have a jump label
-                    string jmpLbl = codeLines[i].Split("(")[1][..^1];
-                    jumpSubstitutions.Add(jmpLbl, i.ToString());
-                    codeLines.RemoveAt(i);
-                }
-            }
-            catch(IndexOutOfRangeException)
-            {
-                
+                // we have a jump label
+                string jmpLbl = codeLines[i].Split("(")[1][..^1];
+                jumpSubstitutions.Add(jmpLbl, i.ToString());
+                codeLines.RemoveAt(i);
+                i -= 1;
             }
         }
+
+        foreach( KeyValuePair<string, string> kvp in jumpSubstitutions )
+        {
+            Debug.WriteLine($"{kvp.Key}: {kvp.Value}");
+        }
+
         for ( int i = 0; i < codeLines.Count; i++ )
         {
             try
